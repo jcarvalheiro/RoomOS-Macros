@@ -1,0 +1,33 @@
+/**
+ * Script pour faire des appels rapide vers des contacts Webex ou autres services.
+ */
+
+import xapi from 'xapi';
+
+// Défini un id de Widget pour chaque personne dial_initiales par exemple.
+
+const numbers = {
+  dial_number1: 'user.name@test.com',
+};
+
+// Fonction d'appel
+
+function dial(number) {
+  console.log('dial', number);
+  xapi.Command.Dial({ Number: number });
+}
+
+// Fait appel à la fonction d'appel lors d'un clic sur un des différents participant, puis appelle l'id correspondant au widget
+
+function listenToGui() {
+  xapi.Event.UserInterface.Extensions.Widget.Action.on((event) => {
+    if (event.Type === 'clicked') {
+      const number = numbers[event.WidgetId];
+      if (number) {
+        dial(number);
+      }
+    }
+  });
+}
+
+listenToGui();
